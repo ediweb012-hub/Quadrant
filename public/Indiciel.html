@@ -533,10 +533,14 @@ function dessinerTexteEU(text, radius, letterSpacing, color, variation) {
 
   // Récupère les données depuis ton serveur et met à jour jauges + textes
 
-  async function fetchData() {
+ async function fetchData() {
     try {
-      const res = await fetch('/quotes');
+      console.log("fetchData lancé");
+
+      const res = await fetch('/quotes'); // ✅ IMPORTANT
       const data = await res.json();
+
+      console.log("DATA REÇUE :", data);
 
       const usAvg = (
         (data.US.SP500?.variation ?? 0) +
