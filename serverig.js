@@ -5,6 +5,9 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors());
+app.use(express.static('public'));
+
+
 
 // 🔐 Configuration IG
 const IG_API_KEY = process.env.IG_API_KEY;
