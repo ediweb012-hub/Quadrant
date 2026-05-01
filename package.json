@@ -2,7 +2,7 @@
   "name": "ig-proxy",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "serverig.js",
   "dependencies": {
     "accepts": "^1.3.8",
     "array-flatten": "^1.1.1",
