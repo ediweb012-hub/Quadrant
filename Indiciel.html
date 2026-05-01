@@ -532,12 +532,11 @@ function dessinerTexteEU(text, radius, letterSpacing, color, variation) {
 
 
   // Récupère les données depuis ton serveur et met à jour jauges + textes
- async function fetchData() {
-  try {
-    const res = await fetch('https://quadrant-8u9d.onrender.com/quotes');
-    const data = await res.json();
-    console.log("DATA REÇUE :", data);
-
+ 
+async function fetchData() {
+    try {
+      const res = await fetch('http://localhost:3000/quotes');
+      const data = await res.json();
 
 
 async function fetchData() {
