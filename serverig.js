@@ -198,7 +198,7 @@ app.get('/test/:epic', async (req, res) => {
 const path = require('path');
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Indiciel.html'));
+ res.sendFile(path.join(__dirname, 'public', 'Indiciel.html'));
 });
 
 
