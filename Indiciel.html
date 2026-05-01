@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Indiciel</title>
+  <link rel="icon" href="favicon.png">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-top: 40px;  
+      font-size: 1.1em;
+      color: #fff;
+    }
+
+    .tradingview-widget-container {
+      max-width: 100%;
+      margin-top: 50px;     
+      margin-bottom: 50px;  
+    }
+
+    .quadrant {
+      position: relative;
+      width: 500px;
+      height: 500px;
+      margin: 0 auto 50px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .ring1 { width: 460px; height: 460px; }
+    .ring2 { width: 390px; height: 390px; }
+    .ring3 { width: 320px; height: 320px; }
+    .ring4 { width: 250px; height: 250px; }
+    .ring5 { width: 180px; height: 180px; }
+    .ring6 { width: 110px; height: 110px; }
+
+    .center-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #000;
+      color: white;
+      border-radius: 50%;
+      width: 90px;
+      height: 90px;
+      font-weight: bold;
+      font-size: 0.7em;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10px;
+      box-sizing: border-box;
+    }
+
+    .center-line {
+     position: absolute;
+     top: 0%;
+     left: 50%;
+     width: 1.5px;
+     height: 100%;
+     background-color: red;
+     transform: translateX(-50%);
+     border-radius: 2px;
+     z-index: 20;
+    }
+
+    .gradient-us, .gradient-eu {
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      z-index: 1;
+    }
+    .gradient-us {
+      left: 0;
+      border-top-left-radius: 50%;
+      border-bottom-left-radius: 50%;
+      background: linear-gradient(to bottom,
+        green 0%, green 25%, yellow 40%, orange 70%, red 80%);
+    }
+    .gradient-eu {
+      right: 0;
+      border-top-right-radius: 50%;
+      border-bottom-right-radius: 50%;
+      background: linear-gradient(to bottom,
+        darkblue 0%, darkblue 20%, lightblue 45%, pink 70%, violet 90%);
+    }
+
+    .sentiment-gauge {
+      position: absolute;
+      width: 180px;
+      height: 15px;
+      font-size: 0.8em;
+      text-align: center;
+      z-index: 50;
+    }
+    .gauge-us { left: calc(50% - 500px/2 - 260px); top: 50%; transform: translateY(-50%); }
+    .gauge-eu { left: calc(50% + 500px/2 + 80px); top: 50%; transform: translateY(-50%); }
+    .gauge-label { margin-bottom: 4px; color: white; }
+    .gauge-bar { position: relative; width: 100%; height: 15px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.3); }
+    .gauge-bar.us { background: linear-gradient(to right, red, orange, yellow, green); }
+    .gauge-bar.eu { background: linear-gradient(to right, darkblue, lightblue, pink, violet); }
+    .gauge-arrow { position: absolute; top: 50%; left: 0; width: 10px; height: 10px; background-color: white; border-radius: 50%; transform: translateY(-50%); transition: left 0.8s ease; }
+
+    .legend-gauge {
+      width: 180px;
+      margin: 5px auto 20px;
+      font-size: 0.75em;
+      text-align: center;
+    }
+    .legend-gauge span {
+      margin: 0 3px;
+      white-space: nowrap;
+    }
+    .eu-blue-dark { color: #0044cc; }
+  </style>
+</head>
+<body>
+
+<h1>Indiciel</h1>
+
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+  <div class="tradingview-widget-copyright">
+    <a href="https://fr.tradingview.com/markets/" rel="noopener nofollow" target="_blank">
+      <span class="blue-text"></span>
+    </a>
+  </div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+  {
+    "symbols": [
+      {"proName": "FX_IDC:EURUSD","title": "EUR/USD"},
+      {"proName": "BITSTAMP:BTCUSD","title": "BITCOIN"},
+      {"proName": "FOREXCOM:XAUUSD","title": "GOLD"},
+      {"proName": "CAPITALCOM:DXY","title": "DOLLAR INDEX"}, 
+      {"proName": "VANTAGE:DJ30","title": "DOW JONES"},
+      {"proName": "CAPITALCOM:US500","title": "SP500"},
+      {"proName": "PEPPERSTONE:NAS100","title": "NASDAQ"},
+      {"proName": "ICMARKETS:US2000","title": "RUSSELL 2000"},
+      {"proName": "INDEX:BEL20","title": "BEL20"},
+      {"proName": "TRADENATION:IBEX","title": "IBEX35"},
+      {"proName": "INDEX:FTSEMIB","title": "FTSE MIB"},
+      {"proName": "IG:FTSE","title": "FTSE 100"},
+      {"proName": "INDEX:SMI","title": "SMI"},
+      {"proName": "OANDA:DE30EUR","title": "DAX40"},
+      {"proName": "IG:CAC","title": "CAC40"},
+      {"proName": "OANDA:EU50EUR","title": "EUROSTOXX50"},
+      {"proName": "INDEX:PSI20","title": "PSI20"},
+      {"proName": "OMXSTO:OMXS30","title": "OMX30"},
+      {"proName": "IG:AEX","title": "AEX30"},
+      {"proName": "OANDA:JP225USD","title": "NIKKEI 225"},
+      {"proName": "SSE:000001","title": "SHANGHAI COMPOSITE"}
+    ],
+    "colorTheme": "dark",
+    "locale": "fr",
+    "largeChartUrl": "",
+    "isTransparent": false,
+    "showSymbolLogo": true,
+    "displayMode": "compact"
+  }
+  </script>
+</div>
+
+<div class="quadrant" id="quadrant">
+  <div class="ring ring1"></div>
+  <div class="ring ring2"></div>
+  <div class="ring ring3"></div>
+  <div class="ring ring4"></div>
+  <div class="ring ring5"></div>
+  <div class="ring ring6"></div>
+  <div class="gradient-us"></div>
+  <div class="gradient-eu"></div>
+
+  <!-- Centre avec rond noir statique -->
+  <div class="center-label">
+  <div style="flex: 1; text-align: left; padding-left: 6px;">US</div>
+
+  <!-- ✅ Le petit trait rouge -->
+  <div class="center-line"></div>
+
+  <div style="flex: 1; text-align: right; padding-right: 6px;">EU</div>
+</div>
+
+
+  <canvas id="repereComplet" width="500" height="500"
+          style="position:absolute; top:0; left:0; z-index:8; pointer-events:none;"></canvas>
+
+
+  <script>
+    const canvas = document.getElementById('repereComplet');
+    const ctx = canvas.getContext('2d');
+
+    ctx.strokeStyle = 'red';
+    ctx.lineWidth = 0.8;
+
+    const centerX = 250;
+    const centerY = 250;
+    const radius = 250;
+    const diagFactor = 0.355;
+    const lineMinX = 160;
+    const lineMaxX = 340;
+
+    const angleUSplus = Math.PI / 4;
+    const angleUSmoins = -Math.PI / 4;
+    const angleEUplus = Math.PI - Math.PI / 4;
+    const angleEUmoins = Math.PI + Math.PI / 4;
+
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + radius * diagFactor * Math.cos(angleUSplus),
+               centerY - radius * diagFactor * Math.sin(angleUSplus));
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + radius * diagFactor * Math.cos(angleUSmoins),
+               centerY - radius * diagFactor * Math.sin(angleUSmoins));
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + radius * diagFactor * Math.cos(angleEUplus),
+               centerY - radius * diagFactor * Math.sin(angleEUplus));
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + radius * diagFactor * Math.cos(angleEUmoins),
+               centerY - radius * diagFactor * Math.sin(angleEUmoins));
+
+    ctx.moveTo(lineMinX, centerY);
+    ctx.lineTo(lineMaxX, centerY);
+    ctx.stroke();
+  </script>
+</div>
+
+<!-- Gauges US -->
+<div class="sentiment-gauge gauge-us">
+  <div class="gauge-label">
+    US <span id="valueUS" style="margin-left:8px;">--%</span>
+  </div>
+  <div class="gauge-bar us"><div class="gauge-arrow" id="arrowUS"></div></div>
+  <div class="legend-gauge" id="legendUS" style="margin-top:5px;">US: --</div>
+</div>
+
+<!-- Gauges EU -->
+<div class="sentiment-gauge gauge-eu">
+  <div class="gauge-label">
+    EU <span id="valueEU" style="margin-left:8px;">--%</span>
+  </div>
+  <div class="gauge-bar eu"><div class="gauge-arrow" id="arrowEU"></div></div>
+  <div class="legend-gauge" id="legendEU" style="margin-top:5px;">EU: --</div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const arrowUS = document.getElementById('arrowUS');
+  const arrowEU = document.getElementById('arrowEU');
+  const valueUS = document.getElementById('valueUS');
+  const valueEU = document.getElementById('valueEU');
+  const legendUS = document.getElementById('legendUS');
+  const legendEU = document.getElementById('legendEU');
+
+  const colorUS = 'black';
+  const colorEU = 'white';
+
+  // Met à jour la position de l'aiguille des jauges
+  function updateGauge(value, arrow, width = 180, reverse = false) {
+  if (typeof value !== 'number') return;
+  const min = -5;
+  const max = 5;
+  let pos = ((value - min) / (max - min)) * (width - 10);
+  pos = Math.max(0, Math.min(pos, width - 10));
+
+  if (reverse) pos = width - pos - 10; // ✅ inversion du sens
+
+  arrow.style.left = pos + "px";
+}
+
+
+     function getSentimentLabel(value, isUS = true) {
+    const baseStyle = "font-size:15px; font-family:'Segoe UI', Arial, sans-serif; font-weight:600;";
+    if (value > 3) value = 3;
+    if (value < -3) value = -3;
+
+    if (isUS) {
+      if (value >= 1.5)  return `<span style="${baseStyle}; color:green;">🍀 Très haussier</span>`;
+      if (value >= 0.7)  return `<span style="${baseStyle}; color:limegreen;">🌿 Haussier</span>`;
+      if (value >= 0.3)  return `<span style="${baseStyle}; color:yellow;">🍋 Haussier léger</span>`;
+      if (value > -0.3 && value < 0.3) return `<span style="${baseStyle}; color:lightyellow;">🌕 Neutre</span>`;
+      if (value <= -0.3 && value > -0.7) return `<span style="${baseStyle}; color:Goldenrod;">🍊 Baissier léger</span>`;
+      if (value <= -0.7 && value > -1.5) return `<span style="${baseStyle}; color:orange;">🩸 Baissier</span>`;
+      if (value <= -1.5) return `<span style="${baseStyle}; color:red;">❤️ Très baissier</span>`;
+    } else {
+      if (value >= 1.5)  return `<span style="${baseStyle}; color:blue;">🌀 Très haussier</span>`;
+      if (value >= 0.7)  return `<span style="${baseStyle}; color:deepskyblue;">❄️ Haussier</span>`;
+      if (value >= 0.3)  return `<span style="${baseStyle}; color:skyblue;">💎 Haussier léger</span>`;
+      if (value > -0.3 && value < 0.3) return `<span style="${baseStyle}; color:lightcyan;">⚓ Neutre</span>`;
+      if (value <= -0.3 && value > -0.7) return `<span style="${baseStyle}; color:lavender;">⬜ Baissier léger</span>`;
+      if (value <= -0.7 && value > -1.5) return `<span style="${baseStyle}; color:pink;">🌸 Baissier</span>`;
+      if (value <= -1.5) return `<span style="${baseStyle}; color:deeppink;">🍁 Très baissier</span>`;
+    }
+  }
+
+
+  // Dessine le texte circulaire autour du quadrant
+  function dessinerTexte(canvasId, angleCenter, radius, text, angleStep, color = 'white') {
+    const oldCanvas = document.getElementById(canvasId);
+    if (oldCanvas) oldCanvas.remove();
+
+    const canvas = document.createElement('canvas');
+    canvas.id = canvasId;
+    canvas.width = 500;
+    canvas.height = 500;
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.zIndex = '15';
+    canvas.style.pointerEvents = 'none';
+    document.getElementById('quadrant').appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    const centerX = 250;
+    const centerY = 250;
+
+    ctx.font = '11px Arial black';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const totalAngle = angleStep * (text.length - 1);
+    const startAngle = angleCenter - totalAngle / 2;
+
+    for (let i = 0; i < text.length; i++) {
+      const angle = startAngle + i * angleStep;
+      const x = centerX + radius * Math.cos(angle);
+      const y = centerY + radius * Math.sin(angle);
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle + Math.PI / 2);
+
+      if (Array.isArray(color)) {
+        ctx.fillStyle = color[i] || 'white';
+      } else {
+        ctx.fillStyle = color;
+      }
+
+      ctx.fillText(text[i], 0, 0);
+      ctx.restore();
+    }
+  }
+
+  const US_INDICES = {
+    RUSSELL: { radius: 212, letterSpacing: 0.040 },
+    NASDAQ:  { radius: 177, letterSpacing: 0.055 },
+    SP500:   { radius: 142, letterSpacing: 0.065 },
+    DOW:     { radius: 108, letterSpacing: 0.10 }
+  };
+
+  const EU_INDICES = {
+    IBEX35: { radius: 213, letterSpacing: 0.045 },
+    STOXX:   { radius: 176, letterSpacing: 0.055 },
+    CAC:    { radius: 142, letterSpacing: 0.08 },
+    DAX:    { radius: 106, letterSpacing: 0.11 }
+  };
+
+  function variationToAngleUSLinear(variation) {
+    const v = Math.max(Math.min(variation, 3), -3);
+    const minAngle = Math.PI / 2;
+    const maxAngle = (3 * Math.PI) / 2;
+    return minAngle + ((v - (-3)) / 6) * (maxAngle - minAngle);
+  }
+
+  function variationToAngleEULinear(variation) {
+    const v = Math.max(Math.min(variation, 3), -3);
+    const minAngle = Math.PI / 2;
+    const maxAngle = -Math.PI / 2;
+    return minAngle + ((v - (-3)) / 6) * (maxAngle - minAngle);
+  }
+
+
+// --- TEXTE US ---
+function dessinerTexteUS(text, radius, letterSpacing, color, variation) {
+  const config = US_INDICES[text];
+  if (!config) return;
+
+  // Calcul de l'angle selon la variation
+  let angle = variationToAngleUSLinear(variation);
+
+  // ✅ Offsets individuels pour régler la position du texte
+  const offsets = {
+    RUSSELL: -0.00,   // positif = tourne vers la droite, négatif = gauche
+    NASDAQ:  -0.00,
+    SP500:   -0.00,
+    DOW:     -0.00
+  };
+
+  angle += offsets[text] || 0;
+
+  dessinerTexte('canvas-' + text.toLowerCase(), angle, radius, text, letterSpacing, color);
+}
+
+// --- TEXTE EU ---
+function dessinerTexteEU(text, radius, letterSpacing, color, variation) {
+  const config = EU_INDICES[text];
+  if (!config) return;
+
+  // Calcul de l'angle selon la variation
+  let angle = variationToAngleEULinear(variation);
+
+  // ✅ Offsets individuels pour régler la position du texte
+  const offsets = {
+    IBEX35: 0.00,
+    STOXX:  0.00,
+    CAC:    0.00,
+    DAX:    0.00
+  };
+
+  angle += offsets[text] || 0;
+
+  dessinerTexte('canvas-' + text.toLowerCase(), angle, radius, text, letterSpacing, color);
+}
+
+  // --- AJOUT : fonction pour écrire les pourcentages fixes sur les lignes rouges ---
+  function dessinerMarqueurPourcentage(id, angle, texte, radius, offsetRadius = 0, offsetY = 0, incline = false) {
+  const old = document.getElementById(id);
+  if (old) old.remove();
+
+  const canvas = document.createElement('canvas');
+  canvas.id = id;
+  canvas.width = 500;
+  canvas.height = 500;
+  canvas.style.position = 'absolute';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.style.zIndex = '20';
+  canvas.style.pointerEvents = 'none';
+  document.getElementById('quadrant').appendChild(canvas);
+
+  const ctx = canvas.getContext('2d');
+
+  ctx.font = '10px Arial Black';
+  ctx.fillStyle = 'red';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  const centerX = 250;
+  const centerY = 250;
+
+  const finalRadius = radius + offsetRadius;
+
+  const x = centerX + finalRadius * Math.cos(angle);
+  const y = centerY + finalRadius * Math.sin(angle) + offsetY;
+
+  ctx.save();
+  ctx.translate(x, y);
+
+  if (incline) {
+    ctx.rotate(angle);
+  }
+
+  ctx.fillText(texte, 0, 0);
+  ctx.restore();
+}
+
+
+
+  function dessinerTexteSurLigneRouge(id, angle, texte, offset = 0, offsetY = 0, isUS = false) {
+  const old = document.getElementById(id);
+  if (old) old.remove();
+
+  const canvas = document.createElement('canvas');
+  canvas.id = id;
+  canvas.width = 500;
+  canvas.height = 500;
+  canvas.style.position = 'absolute';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.style.zIndex = '20';
+  canvas.style.pointerEvents = 'none';
+  document.getElementById('quadrant').appendChild(canvas);
+
+  const ctx = canvas.getContext('2d');
+
+  ctx.font = '10px Arial Black';
+  ctx.fillStyle = 'red';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  const centerX = 250;
+  const centerY = 250;
+  const baseRadius = 250 * 0.355;
+  const r = baseRadius + offset;
+
+  const x = centerX + r * Math.cos(angle);
+  const y = centerY - r * Math.sin(angle) + offsetY;
+
+  ctx.save();
+  ctx.translate(x, y);
+
+  // rotation de base alignée à la ligne
+  let rot = -angle;
+
+  // pour garder le texte lisible (jamais la tête en bas)
+  if (rot > Math.PI / 2 || rot < -Math.PI / 2) {
+    rot += Math.PI;
+  }
+
+  ctx.rotate(rot);
+  ctx.fillText(texte, 0, 0);
+  ctx.restore();
+}
+
+
+     const angleUSplus  = Math.PI / 4;        // US haut
+     const angleUSmoins = -Math.PI / 4;       // US bas
+     const angleEUplus  = Math.PI - Math.PI / 4;
+     const angleEUmoins = Math.PI + Math.PI / 4;
+
+
+
+  // Récupère les données depuis ton serveur et met à jour jauges + textes
+  async function fetchData() {
+    try {
+      const res = await fetch('http://localhost:3000/quotes');
+      const data = await res.json();
+
+      const usAvg = (
+        (data.US.SP500?.variation ?? 0) +
+        (data.US.DOW?.variation ?? 0) +
+        (data.US.NASDAQ?.variation ?? 0) +
+        (data.US.RUSSELL?.variation ?? 0)
+      ) / 4;
+
+      const euAvg = (
+        (data.EU.IBEX?.variation ?? 0) +
+        (data.EU.CAC?.variation ?? 0) +
+        (data.EU.STOXX50?.variation ?? 0) +
+        (data.EU.DAX?.variation ?? 0)
+      ) / 4;
+
+      updateGauge(usAvg, arrowUS);
+      updateGauge(euAvg, arrowEU, 180, true);
+
+      valueUS.textContent = (usAvg >= 0 ? '+' : '- ') + Math.abs(usAvg).toFixed(2) + '%';
+      valueEU.textContent = (euAvg >= 0 ? '+' : '- ') + Math.abs(euAvg).toFixed(2) + '%';
+
+      // **Injection des légendes colorées**
+      legendUS.innerHTML = getSentimentLabel(usAvg, true);
+      legendEU.innerHTML = getSentimentLabel(euAvg, false);
+
+      // Textes circulaires
+      dessinerTexteUS('RUSSELL', 212, 0.043, colorUS, (data.US.RUSSELL?.variation ?? 0));
+      dessinerTexteUS('NASDAQ', 177, 0.055, colorUS, (data.US.NASDAQ?.variation ?? 0));
+      dessinerTexteUS('SP500', 142, 0.065, colorUS, (data.US.SP500?.variation ?? 0));
+      dessinerTexteUS('DOW', 108, 0.10, colorUS, (data.US.DOW?.variation ?? 0));
+
+      dessinerTexteEU('IBEX35', 213, 0.045, colorEU, (data.EU.IBEX?.variation ?? 0));
+      dessinerTexteEU('STOXX', 176, 0.055, colorEU, (data.EU.STOXX50?.variation ?? 0));
+      dessinerTexteEU('CAC', 142, 0.08, colorEU, (data.EU.CAC?.variation ?? 0));
+      dessinerTexteEU('DAX', 106, 0.11, colorEU, (data.EU.DAX?.variation ?? 0));
+
+      
+              
+     // US
+dessinerTexteSurLigneRouge("us-haut",  angleUSplus,  "+1.5%", -22, -9, true);
+dessinerMarqueurPourcentage("us-milieu", variationToAngleUSLinear(0), "0%", 80, -5, -5, false);
+dessinerTexteSurLigneRouge("us-bas",   angleUSmoins, "-1.5%", -9, -9, true);
+
+// EU
+dessinerTexteSurLigneRouge("eu-haut",  angleEUplus,  "+1.5%", -25, -9, false);
+dessinerMarqueurPourcentage("eu-milieu", variationToAngleEULinear(0), "0%", 80, -5, -5, false);
+dessinerTexteSurLigneRouge("eu-bas",   angleEUmoins, "-1.5%", -9, -9, false);
+
+       
+   } catch (err) {
+      console.error("Erreur fetch:", err);
+      valueUS.textContent = '--%';
+      valueEU.textContent = '--%';
+      legendUS.textContent = 'US: Fermé';
+      legendEU.textContent = 'EU: Fermé';
+    }
+  }
+
+  fetchData();
+  setInterval(fetchData, 120000);
+});
+</script>
+
+<footer style="margin-top: 100px;">
+  <p>© 2025 HE / Editrade. Tous droits réservés.</p>
+</footer>
+
+</body>
+</html>
