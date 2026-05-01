@@ -191,9 +191,6 @@ app.get('/test/:epic', async (req, res) => {
 });
 
 // 🚀 Démarrage serveur
-app.get('/', (req, res) => {
-  res.send('Serveur Quadrant en ligne ✅');
-});
 
 const path = require('path');
 
