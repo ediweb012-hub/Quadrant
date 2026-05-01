@@ -537,7 +537,7 @@ function dessinerTexteEU(text, radius, letterSpacing, color, variation) {
     try {
       console.log("fetchData lancé");
 
-      const res = await fetch('/quotes'); // ✅ IMPORTANT
+      const res = await fetch('https://quadrant-8u9d.onrender.com/quotes');// ✅ IMPORTANT
       const data = await res.json();
 
       console.log("DATA REÇUE :", data);
