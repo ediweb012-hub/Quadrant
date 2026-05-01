@@ -195,6 +195,13 @@ app.get('/', (req, res) => {
   res.send('Serveur Quadrant en ligne ✅');
 });
 
+const path = require('path');
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'Indiciel.html'));
+});
+
+
 loginIG().then(() => {
   app.listen(PORT, () => console.log(`🟢 IG Proxy ${IG_ACCOUNT_TYPE} lancé sur http://localhost:${PORT}`));
 });
