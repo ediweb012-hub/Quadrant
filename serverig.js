@@ -191,6 +191,10 @@ app.get('/test/:epic', async (req, res) => {
 });
 
 // 🚀 Démarrage serveur
+app.get('/', (req, res) => {
+  res.send('Serveur Quadrant en ligne ✅');
+});
+
 loginIG().then(() => {
   app.listen(PORT, () => console.log(`🟢 IG Proxy ${IG_ACCOUNT_TYPE} lancé sur http://localhost:${PORT}`));
 });
