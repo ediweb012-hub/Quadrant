@@ -603,10 +603,17 @@ dessinerTexteSurLigneRouge("eu-bas",   angleEUmoins, "-2%", -9, -9, false);
   setInterval(fetchData, 120000);
 });
 </script>
-
+  
 <footer style="margin-top: 100px;">
   <p>© 2025 HE / Editrade. Tous droits réservés.</p>
 </footer>
 
+<script>
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    alert("© 2025 Editrade. Tous droits réservés !");
+});
+</script>
+  
 </body>
 </html>
